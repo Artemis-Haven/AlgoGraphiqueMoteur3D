@@ -62,7 +62,17 @@ void Buffer::DrawLine(const Coord2D p1, const Coord2D p2, const Color c1,
 void Buffer::DrawFilledTriangle(const Coord2D p1, const Coord2D p2,
 		const Coord2D p3, const Color c1, const Color c2, const Color c3)
 {
-	// completer ici
+    scanLineComputer.Init();
+    scanLineComputer.Compute(p1, p2, p3);
+    for(int compteur = scanLineComputer.ymin ; compteur <= scanLineComputer.ymax ; compteur++)
+    {
+        Color cc1, cc2;
+        cc1 = c1*scanLineComputer.leftweight.data[compteur].data[0]+c2*scanLineComputer.leftweight.data[compteur].data[1]+c3*scanLineComputer.leftweight.data[compteur].data[2];
+        cc2 = c1*scanLineComputer.rightweight.data[compteur].data[0]+c2*scanLineComputer.rightweight.data[compteur].data[1]+c3*scanLineComputer.rightweight.data[compteur].data[2];
+        Coord2D left = Coord2D(scanLineComputer.left.data[compteur], compteur);
+        Coord2D right = Coord2D(scanLineComputer.right.data[compteur], compteur);
+        DrawLine(left, right, cc1, cc2);
+    }
 }
 
 void Buffer::DrawPhongTriangle(const Coord2D p1, const Coord2D p2,
