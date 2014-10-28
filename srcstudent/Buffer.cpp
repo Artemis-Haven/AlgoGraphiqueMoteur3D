@@ -29,7 +29,7 @@ void Buffer::DrawLine(const Coord2D p1, const Coord2D p2, const Color c1,
         const2 = 2 * longY;
         critere = const2 - longX;
         for (compteur = 1 ; compteur <= longX ; compteur++) {
-            SetPoint(Coord2D(x,y), c1*w1+c2*w2);
+            SetPoint(Coord2D(x,y), (c1*w1)+(c2*w2));
             if (critere > 0) {
                 y += incY;
                 critere += const1;
@@ -37,7 +37,7 @@ void Buffer::DrawLine(const Coord2D p1, const Coord2D p2, const Color c1,
                 critere += const2;
             }
             x += incX;
-            w1 = (longX - compteur)/longX;
+            w1 = (double)(longX - compteur)/(double)(longX);
             w2 = 1 - w1;
         }
     } else {
@@ -45,7 +45,7 @@ void Buffer::DrawLine(const Coord2D p1, const Coord2D p2, const Color c1,
         const2 = 2 * longX;
         critere = const2 - longY;
         for (compteur = 1 ; compteur <= longY ; compteur++) {
-            SetPoint(Coord2D(x,y), c1*w1+c2*w2);
+            SetPoint(Coord2D(x,y), (c1*w1)+(c2*w2));
             if (critere > 0) {
                 x += incX;
                 critere += const1;
@@ -53,7 +53,7 @@ void Buffer::DrawLine(const Coord2D p1, const Coord2D p2, const Color c1,
                 critere += const2;
             }
             y += incY;
-            w1 = (longY - compteur)/longY;
+            w1 = (double)(longY - compteur)/(double)(longY);
             w2 = 1 - w1;
         }
     }
