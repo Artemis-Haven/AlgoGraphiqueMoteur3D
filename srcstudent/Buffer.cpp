@@ -10,7 +10,8 @@ void Buffer::DrawLine(const Coord2D p1, const Coord2D p2, const Color c1,
     int longX = p2.x - p1.x;
     int longY = p2.y - p1.y;
     int critere, const1, const2, incX, incY, compteur;
-
+    double w1 = 1;
+    double w2 = 1 - w1;
     if (longX >= 0) {
         incX = 1;
     } else {
@@ -28,7 +29,7 @@ void Buffer::DrawLine(const Coord2D p1, const Coord2D p2, const Color c1,
         const2 = 2 * longY;
         critere = const2 - longX;
         for (compteur = 1 ; compteur <= longX ; compteur++) {
-            SetPoint(Coord2D(x,y), c1);
+            SetPoint(Coord2D(x,y), c1*w1+c2*w2);
             if (critere > 0) {
                 y += incY;
                 critere += const1;
@@ -36,13 +37,15 @@ void Buffer::DrawLine(const Coord2D p1, const Coord2D p2, const Color c1,
                 critere += const2;
             }
             x += incX;
+            w1 = (longX - compteur)/longX;
+            w2 = 1 - w1;
         }
     } else {
         const1 = 2 * (longX - longY);
         const2 = 2 * longX;
         critere = const2 - longY;
         for (compteur = 1 ; compteur <= longY ; compteur++) {
-            SetPoint(Coord2D(x,y), c1);
+            SetPoint(Coord2D(x,y), c1*w1+c2*w2);
             if (critere > 0) {
                 x += incX;
                 critere += const1;
@@ -50,28 +53,10 @@ void Buffer::DrawLine(const Coord2D p1, const Coord2D p2, const Color c1,
                 critere += const2;
             }
             y += incY;
+            w1 = (longY - compteur)/longY;
+            w2 = 1 - w1;
         }
     }
-
-    /*
-    int x;
-    int y = p1.y;
-
-    int Const2 = 2 * (p2.y - p1.y);
-    int Const1 = Const2 - 2 * (p2.x - p1.x);
-    int Critere = Const2 - (p2.x - p1.x);
-
-    for (x = p1.x ; x <= p2.x ; x++)
-    {
-        SetPoint(Coord2D(x,y), c1);
-        if (Critere >= 0)
-        {
-            y++;
-            Critere += Const1;
-        } else {
-            Critere += Const2;
-        }
-    }*/
 }
 
 void Buffer::DrawFilledTriangle(const Coord2D p1, const Coord2D p2,
