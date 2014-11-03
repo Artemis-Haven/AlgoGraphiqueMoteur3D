@@ -57,28 +57,27 @@ void Renderer::DrawFilaireCache()
 }
 void Renderer::DrawFacePleine()
 {
-	for(int i = 0 ; i < drawable->faces.size ; i++) {
-        if(effectiveDrawable->faceVisibles.data[i])
+	for(int i = 0 ; i < effectiveDrawable->sortedVisibleFaces.size; i++) {
+        FaceDepthAccessor depth = effectiveDrawable->sortedVisibleFaces.data[i];
+        Face face = drawable->faces.data[depth.index];
+        Color c1, c2, c3;
+        if(drawable->colorOnFace)
         {
-            Face face = drawable->faces.data[i];
-            Color c1, c2, c3;
-            if(drawable->colorOnFace)
-            {
-                c1 = drawable->faceColors.data[face.index1];
-                c2 = drawable->faceColors.data[face.index2];
-                c3 = drawable->faceColors.data[face.index3];
-            }
-            else
-            {
-                c1 = drawable->pointColors.data[face.index1];
-                c2 = drawable->pointColors.data[face.index2];
-                c3 = drawable->pointColors.data[face.index3];
-            }
-            Coord2D p1 = renderable.points2D.data[face.index1];
-            Coord2D p3 = renderable.points2D.data[face.index3];
-            Coord2D p2 = renderable.points2D.data[face.index2];
-            buffer->DrawFilledTriangle(p1, p2, p3, c1, c2, c3);
+            c1 = drawable->faceColors.data[face.index1];
+            c2 = drawable->faceColors.data[face.index2];
+            c3 = drawable->faceColors.data[face.index3];
         }
+        else
+        {
+            c1 = drawable->pointColors.data[face.index1];
+            c2 = drawable->pointColors.data[face.index2];
+            c3 = drawable->pointColors.data[face.index3];
+        }
+        Coord2D p1 = renderable.points2D.data[face.index1];
+        Coord2D p3 = renderable.points2D.data[face.index3];
+        Coord2D p2 = renderable.points2D.data[face.index2];
+        buffer->DrawFilledTriangle(p1, p2, p3, c1, c2, c3);
+
 	}
 }
 

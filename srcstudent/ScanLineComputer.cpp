@@ -33,7 +33,14 @@ void ScanLineComputer::AddEdge(const Coord2D p1, const Coord2D p2,
         const2 = 2 * longY;
         critere = const2 - longX;
         for (compteur = 1 ; compteur <= longX ; compteur++) {
-            AddPoint(x, y, p1, p2, index1, index2);
+            try{
+                if((y >= 0)&&(y < height))
+                    AddPoint(x, y, p1, p2, index1, index2);
+            }
+            catch(...)
+            {
+                std::cerr << "x : " << x << " y : " << y << std::endl;
+            }
             if (critere > 0) {
                 y += incY;
                 critere += const1;
@@ -47,7 +54,14 @@ void ScanLineComputer::AddEdge(const Coord2D p1, const Coord2D p2,
         const2 = 2 * longX;
         critere = const2 - longY;
         for (compteur = 1 ; compteur <= longY ; compteur++) {
-            AddPoint(x, y, p1, p2, index1, index2);
+            try{
+                if((y >= 0)&&(y < height))
+                    AddPoint(x, y, p1, p2, index1, index2);
+            }
+            catch(...)
+            {
+                std::cerr << "x : " << x << " y : " << y << std::endl;
+            }
             if (critere > 0) {
                 x += incX;
                 critere += const1;
