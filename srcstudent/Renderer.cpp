@@ -77,19 +77,91 @@ void Renderer::DrawFacePleine()
         Coord2D p3 = renderable.points2D.data[face.index3];
         Coord2D p2 = renderable.points2D.data[face.index2];
         buffer->DrawFilledTriangle(p1, p2, p3, c1, c2, c3);
-
 	}
 }
 
 void Renderer::DrawLambert()
 {
-	// compléter ici
+    //Ilumination a faire
+    for(int i = 0 ; i < effectiveDrawable->sortedVisibleFaces.size; i++) {
+        FaceDepthAccessor depth = effectiveDrawable->sortedVisibleFaces.data[i];
+        Face face = drawable->faces.data[depth.index];
+        Color c1, c2, c3;
+        Color ambient = ambientLight.ambientColor;
+        if(drawable->colorOnFace)
+        {
+            c1 = drawable->faceColors.data[face.index1];
+            c2 = drawable->faceColors.data[face.index2];
+            c3 = drawable->faceColors.data[face.index3];
+        }
+        else
+        {
+            c1 = drawable->pointColors.data[face.index1];
+            c2 = drawable->pointColors.data[face.index2];
+            c3 = drawable->pointColors.data[face.index3];
+        }
+        c1 = c1*(ambient+pointLight.GetColor(effectiveDrawable->points.data[face.index1], effectiveDrawable->faceNormals.data[depth.index]));
+        c2 = c2*(ambient+pointLight.GetColor(effectiveDrawable->points.data[face.index2], effectiveDrawable->faceNormals.data[depth.index]));
+        c3 = c3*(ambient+pointLight.GetColor(effectiveDrawable->points.data[face.index3], effectiveDrawable->faceNormals.data[depth.index]));
+
+        Coord2D p1 = renderable.points2D.data[face.index1];
+        Coord2D p3 = renderable.points2D.data[face.index3];
+        Coord2D p2 = renderable.points2D.data[face.index2];
+        buffer->DrawFilledTriangle(p1, p2, p3, c1, c2, c3);
+    }
 }
 void Renderer::DrawGouraud()
 {
-	// compléter ici
+    //Ilumination a faire
+    for(int i = 0 ; i < effectiveDrawable->sortedVisibleFaces.size; i++) {
+        FaceDepthAccessor depth = effectiveDrawable->sortedVisibleFaces.data[i];
+        Face face = drawable->faces.data[depth.index];
+        Color c1, c2, c3;
+        Color ambient = ambientLight.ambientColor;
+        if(drawable->colorOnFace)
+        {
+            c1 = drawable->faceColors.data[face.index1];
+            c2 = drawable->faceColors.data[face.index2];
+            c3 = drawable->faceColors.data[face.index3];
+        }
+        else
+        {
+            c1 = drawable->pointColors.data[face.index1];
+            c2 = drawable->pointColors.data[face.index2];
+            c3 = drawable->pointColors.data[face.index3];
+        }
+        c1 = c1*(ambient+pointLight.GetColor(effectiveDrawable->points.data[face.index1], effectiveDrawable->pointNormals.data[face.index1]));
+        c2 = c2*(ambient+pointLight.GetColor(effectiveDrawable->points.data[face.index2], effectiveDrawable->pointNormals.data[face.index2]));
+        c3 = c3*(ambient+pointLight.GetColor(effectiveDrawable->points.data[face.index3], effectiveDrawable->pointNormals.data[face.index3]));
+
+        Coord2D p1 = renderable.points2D.data[face.index1];
+        Coord2D p3 = renderable.points2D.data[face.index3];
+        Coord2D p2 = renderable.points2D.data[face.index2];
+        buffer->DrawFilledTriangle(p1, p2, p3, c1, c2, c3);
+    }
 }
 void Renderer::DrawPhong()
 {
-	// compléter ici
+    //Ilumination a faire
+    for(int i = 0 ; i < effectiveDrawable->sortedVisibleFaces.size; i++) {
+        FaceDepthAccessor depth = effectiveDrawable->sortedVisibleFaces.data[i];
+        Face face = drawable->faces.data[depth.index];
+        Color c1, c2, c3;
+        if(drawable->colorOnFace)
+        {
+            c1 = drawable->faceColors.data[face.index1];
+            c2 = drawable->faceColors.data[face.index2];
+            c3 = drawable->faceColors.data[face.index3];
+        }
+        else
+        {
+            c1 = drawable->pointColors.data[face.index1];
+            c2 = drawable->pointColors.data[face.index2];
+            c3 = drawable->pointColors.data[face.index3];
+        }
+        Coord2D p1 = renderable.points2D.data[face.index1];
+        Coord2D p3 = renderable.points2D.data[face.index3];
+        Coord2D p2 = renderable.points2D.data[face.index2];
+        buffer->DrawFilledTriangle(p1, p2, p3, c1, c2, c3);
+    }
 }
