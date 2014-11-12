@@ -10,6 +10,7 @@ void ScanLineComputer::AddEdge(const Coord2D p1, const Coord2D p2,
 															 const int index1, const int index2)
 {
 	// on utitlise la méthode de Bresenheim pour calculer les points du segment [p1,p2] et on les ajoute via la méthode AddPoint
+
     int x = p1.x;
     int y = p1.y;
     int longX = p2.x - p1.x;

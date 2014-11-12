@@ -82,7 +82,6 @@ void Renderer::DrawFacePleine()
 
 void Renderer::DrawLambert()
 {
-    //Ilumination a faire
     for(int i = 0 ; i < effectiveDrawable->sortedVisibleFaces.size; i++) {
         FaceDepthAccessor depth = effectiveDrawable->sortedVisibleFaces.data[i];
         Face face = drawable->faces.data[depth.index];
@@ -112,7 +111,6 @@ void Renderer::DrawLambert()
 }
 void Renderer::DrawGouraud()
 {
-    //Ilumination a faire
     for(int i = 0 ; i < effectiveDrawable->sortedVisibleFaces.size; i++) {
         FaceDepthAccessor depth = effectiveDrawable->sortedVisibleFaces.data[i];
         Face face = drawable->faces.data[depth.index];
@@ -142,7 +140,6 @@ void Renderer::DrawGouraud()
 }
 void Renderer::DrawPhong()
 {
-    //Ilumination a faire
     for(int i = 0 ; i < effectiveDrawable->sortedVisibleFaces.size; i++) {
         FaceDepthAccessor depth = effectiveDrawable->sortedVisibleFaces.data[i];
         Face face = drawable->faces.data[depth.index];
@@ -162,6 +159,19 @@ void Renderer::DrawPhong()
         Coord2D p1 = renderable.points2D.data[face.index1];
         Coord2D p3 = renderable.points2D.data[face.index3];
         Coord2D p2 = renderable.points2D.data[face.index2];
-        buffer->DrawFilledTriangle(p1, p2, p3, c1, c2, c3);
+
+        Coord3D q1 = effectiveDrawable->points.data[face.index1];
+        Coord3D q2 = effectiveDrawable->points.data[face.index2];
+        Coord3D q3 = effectiveDrawable->points.data[face.index3];
+
+        Coord3D n1 = effectiveDrawable->pointNormals.data[face.index1];
+        Coord3D n2 = effectiveDrawable->pointNormals.data[face.index2];
+        Coord3D n3 = effectiveDrawable->pointNormals.data[face.index3];
+
+        buffer->DrawPhongTriangle(p1, p2, p3,
+                                   c1, c2, c3,
+                                   q1, q2, q3,
+                                   n1, n2, n3,
+                                   ambientLight, pointLight);
     }
 }
