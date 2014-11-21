@@ -9,9 +9,9 @@ void Renderer::DrawFilaire()
         Color c1, c2, c3;
         if(drawable->colorOnFace)
         {
-            c1 = drawable->faceColors.data[face.index1];
-            c2 = drawable->faceColors.data[face.index2];
-            c3 = drawable->faceColors.data[face.index3];
+            c1 = drawable->faceColors.data[i];
+            c2 = drawable->faceColors.data[i];
+            c3 = drawable->faceColors.data[i];
         }
         else
         {
@@ -36,9 +36,9 @@ void Renderer::DrawFilaireCache()
             Color c1, c2, c3;
             if(drawable->colorOnFace)
             {
-                c1 = drawable->faceColors.data[face.index1];
-                c2 = drawable->faceColors.data[face.index2];
-                c3 = drawable->faceColors.data[face.index3];
+                c1 = drawable->faceColors.data[i];
+                c2 = drawable->faceColors.data[i];
+                c3 = drawable->faceColors.data[i];
             }
             else
             {
@@ -63,9 +63,9 @@ void Renderer::DrawFacePleine()
         Color c1, c2, c3;
         if(drawable->colorOnFace)
         {
-            c1 = drawable->faceColors.data[face.index1];
-            c2 = drawable->faceColors.data[face.index2];
-            c3 = drawable->faceColors.data[face.index3];
+            c1 = drawable->faceColors.data[depth.index];
+            c2 = drawable->faceColors.data[depth.index];
+            c3 = drawable->faceColors.data[depth.index];
         }
         else
         {
@@ -89,9 +89,9 @@ void Renderer::DrawLambert()
         Color ambient = ambientLight.ambientColor;
         if(drawable->colorOnFace)
         {
-            c1 = drawable->faceColors.data[face.index1];
-            c2 = drawable->faceColors.data[face.index2];
-            c3 = drawable->faceColors.data[face.index3];
+            c1 = drawable->faceColors.data[depth.index];
+            c2 = drawable->faceColors.data[depth.index];
+            c3 = drawable->faceColors.data[depth.index];
         }
         else
         {
@@ -118,9 +118,9 @@ void Renderer::DrawGouraud()
         Color ambient = ambientLight.ambientColor;
         if(drawable->colorOnFace)
         {
-            c1 = drawable->faceColors.data[face.index1];
-            c2 = drawable->faceColors.data[face.index2];
-            c3 = drawable->faceColors.data[face.index3];
+            c1 = drawable->faceColors.data[depth.index];
+            c2 = drawable->faceColors.data[depth.index];
+            c3 = drawable->faceColors.data[depth.index];
         }
         else
         {
@@ -146,9 +146,9 @@ void Renderer::DrawPhong()
         Color c1, c2, c3;
         if(drawable->colorOnFace)
         {
-            c1 = drawable->faceColors.data[face.index1];
-            c2 = drawable->faceColors.data[face.index2];
-            c3 = drawable->faceColors.data[face.index3];
+            c1 = drawable->faceColors.data[depth.index];
+            c2 = drawable->faceColors.data[depth.index];
+            c3 = drawable->faceColors.data[depth.index];
         }
         else
         {

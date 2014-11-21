@@ -28,8 +28,9 @@ void Buffer::DrawLine(const Coord2D p1, const Coord2D p2, const Color c1,
         const1 = 2 * (longY - longX);
         const2 = 2 * longY;
         critere = const2 - longX;
-        for (compteur = 1 ; compteur <= longX ; compteur++) {
-            SetPoint(Coord2D(x,y), (c1*w1)+(c2*w2));
+        for (compteur = 0 ; compteur <= longX ; compteur++) {
+            double depth = (p1.depth*w1)+(p2.depth*w2);
+            SetPoint(Coord2D(x,y, depth), (c1*w1)+(c2*w2));
             if (critere > 0) {
                 y += incY;
                 critere += const1;
@@ -44,8 +45,9 @@ void Buffer::DrawLine(const Coord2D p1, const Coord2D p2, const Color c1,
         const1 = 2 * (longX - longY);
         const2 = 2 * longX;
         critere = const2 - longY;
-        for (compteur = 1 ; compteur <= longY ; compteur++) {
-            SetPoint(Coord2D(x,y), (c1*w1)+(c2*w2));
+        for (compteur = 0 ; compteur <= longY ; compteur++) {
+            double depth = (p1.depth*w1)+(p2.depth*w2);
+            SetPoint(Coord2D(x, y, depth), (c1*w1)+(c2*w2));
             if (critere > 0) {
                 x += incX;
                 critere += const1;
@@ -69,8 +71,12 @@ void Buffer::DrawFilledTriangle(const Coord2D p1, const Coord2D p2,
         Color cc1, cc2;
         cc1 = c1*scanLineComputer.leftweight.data[compteur].data[0]+c2*scanLineComputer.leftweight.data[compteur].data[1]+c3*scanLineComputer.leftweight.data[compteur].data[2];
         cc2 = c1*scanLineComputer.rightweight.data[compteur].data[0]+c2*scanLineComputer.rightweight.data[compteur].data[1]+c3*scanLineComputer.rightweight.data[compteur].data[2];
-        Coord2D left = Coord2D(scanLineComputer.left.data[compteur], compteur);
-        Coord2D right = Coord2D(scanLineComputer.right.data[compteur], compteur);
+
+        double depthLeft = p1.depth*scanLineComputer.leftweight.data[compteur].data[0]+p2.depth*scanLineComputer.leftweight.data[compteur].data[1]+p3.depth*scanLineComputer.leftweight.data[compteur].data[2];
+        double depthRight = p1.depth*scanLineComputer.rightweight.data[compteur].data[0]+p2.depth*scanLineComputer.rightweight.data[compteur].data[1]+p3.depth*scanLineComputer.rightweight.data[compteur].data[2];
+
+        Coord2D left = Coord2D(scanLineComputer.left.data[compteur], compteur, depthLeft);
+        Coord2D right = Coord2D(scanLineComputer.right.data[compteur], compteur, depthRight);
         DrawLine(left, right, cc1, cc2);
     }
 }
@@ -85,8 +91,8 @@ void Buffer::DrawPhongTriangle(const Coord2D p1, const Coord2D p2,
     scanLineComputer.Compute(p1, p2, p3);
     for(int compteurY = scanLineComputer.ymin ; compteurY <= scanLineComputer.ymax ; compteurY++)
     {
-        Coord3D n, p, n1, n2, n3, q1, q2, q3;
-        Color c, cc, cc1, cc2, cc3;
+        Coord3D normal, point, n1, n2, q1, q2;
+        Color cc1, cc2;
         cc1 = c1*scanLineComputer.leftweight.data[compteurY].data[0]+c2*scanLineComputer.leftweight.data[compteurY].data[1]+c3*scanLineComputer.leftweight.data[compteurY].data[2];
         cc2 = c1*scanLineComputer.rightweight.data[compteurY].data[0]+c2*scanLineComputer.rightweight.data[compteurY].data[1]+c3*scanLineComputer.rightweight.data[compteurY].data[2];
 
@@ -96,28 +102,28 @@ void Buffer::DrawPhongTriangle(const Coord2D p1, const Coord2D p2,
         n1 = normal1*scanLineComputer.leftweight.data[compteurY].data[0]+normal2*scanLineComputer.leftweight.data[compteurY].data[1]+normal3*scanLineComputer.leftweight.data[compteurY].data[2];
         n2 = normal1*scanLineComputer.rightweight.data[compteurY].data[0]+normal2*scanLineComputer.rightweight.data[compteurY].data[1]+normal3*scanLineComputer.rightweight.data[compteurY].data[2];
 
-        //cc1 = cc1 * (ambientLight.ambientColor + pointLight.GetColor(q1, n1));
-        //cc2 = cc2 * (ambientLight.ambientColor + pointLight.GetColor(q2, n2));
+        double depthLeft = p1.depth*scanLineComputer.leftweight.data[compteurY].data[0]+p2.depth*scanLineComputer.leftweight.data[compteurY].data[1]+p3.depth*scanLineComputer.leftweight.data[compteurY].data[2];
+        double depthRight = p1.depth*scanLineComputer.rightweight.data[compteurY].data[0]+p2.depth*scanLineComputer.rightweight.data[compteurY].data[1]+p3.depth*scanLineComputer.rightweight.data[compteurY].data[2];
 
         int leftX = scanLineComputer.left.data[compteurY];
         int rightX = scanLineComputer.right.data[compteurY];
 
         for (int compteurX = leftX ; compteurX <= rightX ; compteurX++)
         {
+            double depth;
             double poids = 0.5;
             if (leftX != rightX)
                 poids = 1 - (double)(compteurX-leftX)/(double)(rightX-leftX);
 
-            n3 = n1*poids + n2*(1-poids);
+            normal = n1*poids + n2*(1-poids);
 
-            q3 = q1* poids + q2*(1-poids);
+            point = q1* poids + q2*(1-poids);
 
-            cc3 = cc1* poids + cc2*(1-poids);
+            depth = depthLeft*poids + depthRight*(1-poids);
 
-            Color color = cc3 * (ambientLight.ambientColor + pointLight.GetColor(q3, n3));
+            Color color = (cc1* poids + cc2*(1-poids))* (ambientLight.ambientColor + pointLight.GetColor(point, normal));
 
-
-            SetPoint(Coord2D(compteurX, compteurY), color);
+            SetPoint(Coord2D(compteurX, compteurY, depth), color);
         }
     }
 }
