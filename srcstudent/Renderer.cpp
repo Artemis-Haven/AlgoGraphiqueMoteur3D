@@ -10,8 +10,8 @@ void Renderer::DrawFilaire()
         if(drawable->colorOnFace)
         {
             c1 = drawable->faceColors.data[i];
-            c2 = drawable->faceColors.data[i];
-            c3 = drawable->faceColors.data[i];
+            c2 = c1;
+            c3 = c1;
         }
         else
         {
@@ -37,8 +37,8 @@ void Renderer::DrawFilaireCache()
             if(drawable->colorOnFace)
             {
                 c1 = drawable->faceColors.data[i];
-                c2 = drawable->faceColors.data[i];
-                c3 = drawable->faceColors.data[i];
+                c2 = c1;
+                c3 = c1;
             }
             else
             {
@@ -64,8 +64,8 @@ void Renderer::DrawFacePleine()
         if(drawable->colorOnFace)
         {
             c1 = drawable->faceColors.data[depth.index];
-            c2 = drawable->faceColors.data[depth.index];
-            c3 = drawable->faceColors.data[depth.index];
+            c2 = c1;
+            c3 = c1;
         }
         else
         {
@@ -82,7 +82,8 @@ void Renderer::DrawFacePleine()
 
 void Renderer::DrawLambert()
 {
-    for(int i = 0 ; i < effectiveDrawable->sortedVisibleFaces.size; i++) {
+    for(int i = 0 ; i < effectiveDrawable->sortedVisibleFaces.size; i++)
+    {
         FaceDepthAccessor depth = effectiveDrawable->sortedVisibleFaces.data[i];
         Face face = drawable->faces.data[depth.index];
         Color c1, c2, c3;
@@ -90,8 +91,8 @@ void Renderer::DrawLambert()
         if(drawable->colorOnFace)
         {
             c1 = drawable->faceColors.data[depth.index];
-            c2 = drawable->faceColors.data[depth.index];
-            c3 = drawable->faceColors.data[depth.index];
+            c2 = c1;
+            c3 = c1;
         }
         else
         {
@@ -99,9 +100,14 @@ void Renderer::DrawLambert()
             c2 = drawable->pointColors.data[face.index2];
             c3 = drawable->pointColors.data[face.index3];
         }
-        c1 = c1*(ambient+pointLight.GetColor(effectiveDrawable->points.data[face.index1], effectiveDrawable->faceNormals.data[depth.index]));
-        c2 = c2*(ambient+pointLight.GetColor(effectiveDrawable->points.data[face.index2], effectiveDrawable->faceNormals.data[depth.index]));
-        c3 = c3*(ambient+pointLight.GetColor(effectiveDrawable->points.data[face.index3], effectiveDrawable->faceNormals.data[depth.index]));
+
+        Coord3D position = effectiveDrawable->points.data[face.index1]*0.33+effectiveDrawable->points.data[face.index2]*0.33+effectiveDrawable->points.data[face.index3]*0.33;
+
+        Color lightColor = (ambient+pointLight.GetColor(position, effectiveDrawable->faceNormals.data[depth.index]));
+
+        c1 = c1*lightColor;
+        c2 = c2*lightColor;
+        c3 = c3*lightColor;
 
         Coord2D p1 = renderable.points2D.data[face.index1];
         Coord2D p3 = renderable.points2D.data[face.index3];
@@ -119,8 +125,8 @@ void Renderer::DrawGouraud()
         if(drawable->colorOnFace)
         {
             c1 = drawable->faceColors.data[depth.index];
-            c2 = drawable->faceColors.data[depth.index];
-            c3 = drawable->faceColors.data[depth.index];
+            c2 = c1;
+            c3 = c1;
         }
         else
         {
@@ -133,8 +139,8 @@ void Renderer::DrawGouraud()
         c3 = c3*(ambient+pointLight.GetColor(effectiveDrawable->points.data[face.index3], effectiveDrawable->pointNormals.data[face.index3]));
 
         Coord2D p1 = renderable.points2D.data[face.index1];
-        Coord2D p3 = renderable.points2D.data[face.index3];
         Coord2D p2 = renderable.points2D.data[face.index2];
+        Coord2D p3 = renderable.points2D.data[face.index3];
         buffer->DrawFilledTriangle(p1, p2, p3, c1, c2, c3);
     }
 }
@@ -147,8 +153,8 @@ void Renderer::DrawPhong()
         if(drawable->colorOnFace)
         {
             c1 = drawable->faceColors.data[depth.index];
-            c2 = drawable->faceColors.data[depth.index];
-            c3 = drawable->faceColors.data[depth.index];
+            c2 = c1;
+            c3 = c1;
         }
         else
         {
