@@ -15,16 +15,19 @@ bool ZBuffer::ReplaceCurrent(const Coord2D p)
 {
     // completer ici : retourne true si p doit remplacer le point de même coordonnées (p.x,p.y) selon les règles du Z-buffer
     // par defaut, on remplace toujours
+
+    //Si le zbuffer est activé
     if(enabled)
     {
+        //On remplace uniquement si la profondeur du point considéré est inférieure à celle déjà connue
         if(p.depth < depths.data[p.y].data[p.x])
         {
-            depths.data[p.y].data[p.x] = p.depth;
+            depths.data[p.y].data[p.x] = p.depth; //Et on met à jour la valeur connue
             return true;
         }
         else
             return false;
     }
     else
-        return true;
+        return true; //Sinon par défaut on remplace toujours
 }
